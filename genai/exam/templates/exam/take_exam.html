@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Session</title>
+    <style>
+        body { font-family: Inter, sans-serif; background: #f4f4f4; padding: 50px; }
+        .container { background: #fff; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { margin-bottom: 20px; }
+        textarea { width: 100%; padding: 10px; font-size: 1em; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 20px; }
+        .btn { padding: 10px 20px; margin-right: 10px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; }
+        .prev { background: #6c757d; color: #fff; }
+        .skip { background: #ffc107; color: #000; }
+        .next { background: #28a745; color: #fff; }
+        .timer { background: #e9ecef; padding: 10px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; }
+    </style>
+    <script>
+        // Get time from sessionStorage if exists, otherwise use server value
+        var timeLeft;
+
+        if (sessionStorage.getItem('timeLeft')) {
+            timeLeft = parseInt(sessionStorage.getItem('timeLeft'));
+        } else {
+            timeLeft = Math.floor({{ time_remaining }} * 60);
+            sessionStorage.setItem('timeLeft', timeLeft);
+        }
+
+        function startTimer() {
+            var timerDisplay = document.getElementById('timer');
+            var timer = setInterval(function(){
+                var mins = Math.floor(timeLeft / 60);
+                var secs = timeLeft % 60;
+                if (secs < 10) { secs = "0" + secs; }
+
+                timerDisplay.innerHTML = 'Time Left: ' + mins + 'm ' + secs + 's';
+
+                timeLeft--;
+
+                // Save back to sessionStorage on every tick
+                sessionStorage.setItem('timeLeft', timeLeft);
+
+                if (timeLeft < 0) {
+                    clearInterval(timer);
+                    sessionStorage.removeItem('timeLeft');  // Clean up
+                    alert('Time is up! Submitting exam...');
+                    window.location.href = "{% url 'exam:exam_summary' session.id %}";
+                }
+            }, 1000);
+        }
+
+        window.onload = startTimer;
+    </script>
+
+
+</head>
+<body>
+    <div class="container">
+        <div class="timer" id="timer">Loading timer...</div>
+        <h2>Question {{ index|add:1 }} of {{ total }}</h2>
+        <p>{{ question.question_text }}</p>
+
+   <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button class="btn prev" name="prev" {% if index == 0 %}disabled{% endif %}>Previous</button>
+        <button class="btn skip" name="skip">Skip</button>
+
+        {% if is_last_question %}
+            <button class="btn submit" name="submit_exam">Submit Exam</button>
+        {% else %}
+            <button class="btn next" name="next">Next</button>
+        {% endif %}
+    </form>
+
+    </div>
+</body>
+</html>

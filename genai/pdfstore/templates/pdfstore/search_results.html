@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Search Results</title></head>
+<body>
+    <h1>Results for "{{ query }}"</h1>
+    <ul>
+    {% for result in results %}
+        <li><b>{{ result.source }}</b>: {{ result.content|truncatechars:200 }}</li>
+    {% empty %}
+        <li>No results found.</li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'search_chunks' %}">New Search</a>
+</body>
+</html>

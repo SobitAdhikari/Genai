@@ -1,0 +1,29 @@
+<!-- pdfstore/templates/pdfstore/upload_notes.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Notes PDF</title>
+    <style>
+        body { font-family: Arial; background: #f4f4f4; padding: 50px; }
+        .box { background: white; padding: 30px; max-width: 500px; margin: auto; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
+        h2 { margin-bottom: 20px; }
+        input[type="file"], button { width: 100%; padding: 10px; margin-top: 10px; }
+        .message { margin-top: 20px; padding: 15px; background: #e2e3e5; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Upload Notes PDF</h2>
+        {% if message %}
+            <div class="message">{{ message }}</div>
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload and Process</button>
+        </form>
+    </div>
+</body>
+</html>

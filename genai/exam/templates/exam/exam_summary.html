@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Summary</title>
+    <style>
+        body { font-family: Inter, sans-serif; background: #f4f4f4; padding: 50px; }
+        .container { background: #fff; padding: 30px; border-radius: 12px; max-width: 800px; margin: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .question-block { margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 10px; }
+        .question { font-weight: bold; }
+        .answer { margin-top: 10px; font-style: italic; background: #f1f1f1; padding: 10px; border-radius: 8px; }
+        .marks { margin-top: 10px; color: green; font-weight: bold; }
+        .skipped { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Exam Summary</h2>
+
+        <p><strong>Total Marks Awarded:</strong> {{ total_marks }}</p>
+        <hr>
+
+        {% for ans in answers %}
+            <div class="question-block">
+                <div class="question">
+                    Q{{ forloop.counter }}. {{ ans.question.question_text }} ({{ ans.question.marks }} Marks)
+                </div>
+
+                <div class="answer">{{ ans.answer_text|linebreaks }}</div>
+
+                {% if ans.skipped %}
+                    <div class="skipped">Skipped - Marks Awarded: 0</div>
+                {% else %}
+                    <div class="marks">Marks Awarded: {{ ans.marks_awarded }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

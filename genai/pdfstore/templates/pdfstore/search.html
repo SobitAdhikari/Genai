@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head><title>Search Chunks</title></head>
+<body>
+    <h1>Search PDF Chunks</h1>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="query" placeholder="Enter your query">
+        <button type="submit">Search</button>
+    </form>
+</body>
+</html>
